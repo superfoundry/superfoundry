@@ -283,8 +283,11 @@
     }
     svg = svg.replace('</defs>', defs + '</defs>' + shm);
     svg = svg.replace(/viewBox="([^"]+)"/, function (mm, vb) {
+      // pad, then squarify: expand the shorter axis symmetrically so exports are 1:1 and centered
       const p = vb.split(/\s+/).map(Number);
-      return 'viewBox="' + (p[0] - pad).toFixed(0) + ' ' + (p[1] - pad).toFixed(0) + ' ' + (p[2] + 2 * pad).toFixed(0) + ' ' + (p[3] + 2 * pad).toFixed(0) + '"';
+      let x = p[0] - pad, y = p[1] - pad, w = p[2] + 2 * pad, h = p[3] + 2 * pad;
+      if (o.square) { const s = Math.max(w, h); x -= (s - w) / 2; y -= (s - h) / 2; w = s; h = s; }
+      return 'viewBox="' + x.toFixed(0) + ' ' + y.toFixed(0) + ' ' + w.toFixed(0) + ' ' + h.toFixed(0) + '"';
     });
     return svg.replace('<svg ', '<svg style="isolation:isolate" ');
   }
