@@ -128,6 +128,9 @@ html[data-locked="yes"] #gate{display:flex}
   .rail .rail-actions{justify-content:flex-start}
 }
 main{min-width:0;padding-bottom:96px}
+/* With the rail hidden the column has no left-hand companion, so it centres on the
+   viewport instead of hugging the edge with all the slack on the right. */
+@media (max-width:1099px){main{max-width:68ch;margin-inline:auto}}
 
 /* hero */
 .hero{position:relative;padding:40px 0 16px;overflow:hidden}
