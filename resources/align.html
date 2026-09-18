@@ -187,6 +187,8 @@ html[data-figures="on"] .fig[data-open="false"] .fig-head .eyebrow{color:var(--i
 .fig-summary{display:flex;align-items:center;gap:12px;width:100%;appearance:none;background:none;border:0;padding:0;margin:0;text-align:left;cursor:pointer}
 .fig-head .fig-summary:hover{color:var(--ink)}
 .fig-summary:focus-visible{outline:2px solid var(--ember-ink);outline-offset:3px;border-radius:var(--r-sm)}
+/* the heading focused after unlocking is a landing point, not a control - no ring */
+#h1[tabindex]:focus,#h1[tabindex]:focus-visible{outline:none;box-shadow:none}
 .fig-chev{margin-left:auto;flex:0 0 auto;width:7px;height:7px;color:var(--olive);border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform var(--base) var(--ease)}
 .fig-head .fig-summary:hover .fig-chev{color:var(--olive-ink)}
 .fig-summary[aria-expanded="true"] .fig-chev{transform:translateY(1px) rotate(-135deg)}
@@ -296,7 +298,8 @@ html[data-figures="on"] .fig[data-open="false"] .fig-head .eyebrow{color:var(--i
 }
 @media (prefers-reduced-motion: reduce){.fig,.fig-chev{transition:none!important}}
 
-.ix-tag.proposal{color:var(--paper);background:var(--proposal);border-color:var(--proposal)}
+.ix-tag.before{color:var(--paper);background:var(--muted);border-color:var(--muted)}
+.ix-tag.after{color:#0A0A0A;background:var(--ember);border-color:var(--ember)}
 
 </style>
 <script>try{var t=localStorage.getItem('ia-theme-2');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-ia-theme',t)}catch(e){}
@@ -311,7 +314,6 @@ try{var q=new URLSearchParams(location.search).get('figures'),f=(q==='on'||q==='
   <form id="gate-form">
     <span class="eyebrow">Superintelligence Foundry</span>
     <h1>Intrinsic Alignment</h1>
-    <p>This draft is not public yet. Enter the password to read it.</p>
     <label class="sr-only" for="gate-pass">Password</label>
     <input id="gate-pass" type="password" autocomplete="current-password" spellcheck="false" placeholder="Password">
     <button type="submit">Read</button>
@@ -426,12 +428,12 @@ try{var q=new URLSearchParams(location.search).get('figures'),f=(q==='on'||q==='
   <p class="q" id="ba-q"></p>
   <p class="sr-only" id="ba-status" aria-live="polite"></p>
   <div class="cols">
-    <div class="col"><div class="head"><span class="ix-tag">Before</span><span class="wc" id="ba-wc0"></span></div><blockquote id="ba-t0"></blockquote></div>
-    <div class="col"><div class="head"><span class="ix-tag proposal">After</span><span class="wc" id="ba-wc1"></span></div><blockquote id="ba-t1"></blockquote></div>
+    <div class="col"><div class="head"><span class="ix-tag before">Before</span><span class="wc" id="ba-wc0"></span></div><blockquote id="ba-t0"></blockquote></div>
+    <div class="col"><div class="head"><span class="ix-tag after">After</span><span class="wc" id="ba-wc1"></span></div><blockquote id="ba-t1"></blockquote></div>
   </div>
 </div>
 <style>
-#ix-ba .qs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+#ix-ba .qs{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;padding-top:16px;margin-bottom:14px}
 #ix-ba .qs button[aria-pressed="true"]{cursor:default}
 #ix-ba .qs button{appearance:none;background:var(--card);border:1px solid var(--line-strong);border-radius:999px;min-width:34px;height:34px;padding:0 10px;font:500 .78rem/1 var(--font-mono);color:var(--olive-ink);cursor:pointer;transition:background var(--fast) var(--ease),color var(--fast) var(--ease)}
 #ix-ba .qs button:hover{color:var(--ink);border-color:var(--ink)}
@@ -493,7 +495,7 @@ try{var q=new URLSearchParams(location.search).get('figures'),f=(q==='on'||q==='
 </div><p class="fig-caption">Eight of the thirty evaluation questions, answered with the same prompt and the same seed. Across all thirty, the median answer went from 616 words to 65.</p><p class="fig-source"><span>Superintelligence Foundry (2026), <a href="https://superfoundry.dev/" rel="noopener">First test of intrinsic alignment on an open reasoning model (Qwen3.8-27B)</a>, internal evaluation, run 3. Reported values.</span></p></div></figure>
       <p>We have also made progress on continual learning, the ability to write to the model weights <strong class="key">without catastrophic forgetting</strong>, which the loop depends on. That work will get its own essay.</p>
       <p>The next step is a larger experiment. The theory predicts <strong class="key">this should work better with stronger models</strong>, so we want to test it at scale: a model that improves itself on real-world domains, sustaining the interactive learning loop through continual learning and growing its capabilities in an open-ended way.</p>
-      <p><strong class="key">We would welcome collaborators</strong>. If you want to test or develop intrinsic alignment, write to us at <a href="mailto:jad@superfoundry.dev">jad@superfoundry.dev</a>.</p>
+      <p><strong class="key">We welcome collaborators</strong>. If you want to test or develop intrinsic alignment, write to us at <a href="mailto:jad@superfoundry.dev">jad@superfoundry.dev</a>.</p>
     </section>
     </article>
 
