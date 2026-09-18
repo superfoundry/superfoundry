@@ -1,0 +1,2490 @@
+{
+ "id": "fig-5",
+ "sources": [
+  {
+   "authors": "Yue, Chen, Lu, Zhao, Wang, Yue, Song, Huang",
+   "year": 2025,
+   "title": "Does Reinforcement Learning Really Incentivize Reasoning Capacity in LLMs Beyond the Base Model?",
+   "venue": "arXiv:2504.13837 (v5, 24 Nov 2025)",
+   "url": "https://arxiv.org/abs/2504.13837"
+  },
+  {
+   "authors": "Kirk, Mediratta, Nalmpantis, Luketina, Hambro, Grefenstette, Raileanu",
+   "year": 2024,
+   "title": "Understanding the Effects of RLHF on LLM Generalisation and Diversity",
+   "venue": "arXiv:2310.06452 (ICLR 2024)",
+   "url": "https://arxiv.org/abs/2310.06452"
+  }
+ ],
+ "method": "mixed",
+ "methods": {
+  "A": "digitized",
+  "B": "reported values"
+ },
+ "extracted": "Panel A: Figure 2 (Section 3.1 'RLVR for Mathematical Reasoning'), all 16 subplots: columns Qwen-2.5-7B, Qwen-2.5-14B, Qwen-2.5-32B, LLaMA-3.1-8B; rows AIME24, MATH500, Minerva, Olympiad. Read from the vector SVG asset of the arXiv v5 HTML render (https://arxiv.org/html/2504.13837v5/simpleRL_coverage_main.svg). Cross-checked against Table 2 and Table 5 (Section 4.1 / Appendix C.7) and the Section 3.1 statement on Qwen-2.5-32B Minerva at k=128. Metric definition: Section 2.2 and Appendix A.2, Eq. (2). Sampling settings: Section 3 'Evaluation Protocol'. Panel B: Appendix J.4 'Diversity Evaluation', Table 11 (per-input, Eq. 2) and Table 12 (across-input, Eq. 3); BoN column of Table 12 duplicates Table 13. Metric definitions from Section 5.2; interpretation from Section 6.2 and J.4. arXiv v3 HTML render (19 Feb 2024).",
+ "tool": "/Users/jadtarifi/Documents/Claude/intrinsic-alignment/scripts/extract_fig5a_yue2025_fig2.py — vector extraction, not raster colour-picking: parses the figure's SVG (converted from the paper PDF) to read the axes clip rectangles, the black tick marks paired with their glyph-run labels (x: log2-linear fit to labels 1,2,4,... or 1,4,...,1024; y: linear fit to labels 0..1; max residual < 0.02 in log2 k and < 0.002 in y), the legend (teal #008080 = 'Base', red #ff6b6b = 'RL'), and the centre of every filled triangle marker; marker centres are mapped through the per-panel fits and k is snapped to a power of two only when within 3% of it. Sanity checks pass exactly: Qwen-2.5-7B AIME24 k=1024 gives 0.7667 (base) and 0.6333 (RL) = 23/30 and 19/30 solvable problems in Table 5; Qwen-2.5-7B MATH500 k=128 gives 0.960 and 0.934 = the Table 2 category sums; Qwen-2.5-32B Minerva base minus RL at k=128 = 0.0919 vs 'approximately 9%' in Section 3.1.",
+ "accessed": "2026-09-17",
+ "notes": "Panel A (pass@k): y is the paper's 'Coverage (pass@k)': the fraction (0-1) of benchmark problems solved at least once within k samples, computed with the unbiased Chen et al. (2021) estimator (Appendix A.2, Eq. 2) from n samples per problem, where n is the largest k plotted. 'Base' is the pretrained base model (Qwen2.5-7B/14B/32B base variants; LLaMA-3.1-8B) and 'RL' is the corresponding SimpleRLZoo zero-RL checkpoint (Zeng et al. 2025), trained with GRPO on GSM8K plus the MATH training set with a correctness-only reward; both are sampled at temperature 0.6, top-p 0.95, up to 16,384 tokens, with the same prompt (no few-shot). Only the marker points at powers of two are recorded here; the paper's curves also pass through denser intermediate k values (e.g. 3, 5, 6, 9, ...), which were read but omitted for clarity. AIME24 has 30 problems, so its values are multiples of 1/30. For the two LLaMA-3.1-8B panels whose axis extends to 1024 (AIME24, Olympiad) the last plotted point is k=512. Values are read to 4 decimals from vector geometry; treat the last digit as rendering precision. The paper states no numeric crossover k (it says base models 'catch up and surpass' as k 'increases to the tens or hundreds'), so none is recorded. In the extracted points the base curve first exceeds the RL curve on AIME24 Qwen-2.5-7B: between k=128 and k=256; AIME24 Qwen-2.5-14B: between k=256 and k=512; AIME24 Qwen-2.5-32B: between k=64 and k=128; AIME24 LLaMA-3.1-8B: between k=256 and k=512; MATH500 Qwen-2.5-7B: between k=8 and k=16; MATH500 Qwen-2.5-14B: between k=8 and k=16; MATH500 Qwen-2.5-32B: between k=8 and k=16; MATH500 LLaMA-3.1-8B: between k=32 and k=64; Minerva Qwen-2.5-7B: between k=4 and k=8; Minerva Qwen-2.5-14B: between k=8 and k=16; Minerva Qwen-2.5-32B: between k=4 and k=8; Minerva LLaMA-3.1-8B: between k=64 and k=128; Olympiad Qwen-2.5-7B: between k=32 and k=64; Olympiad Qwen-2.5-14B: between k=32 and k=64; Olympiad Qwen-2.5-32B: between k=8 and k=16; Olympiad LLaMA-3.1-8B: between k=256 and k=512. Do not compare these numbers with Table 3/4 (Qwen2.5-7B pass@1 34.5 on MATH500): those come from the paper's own VeRL training runs with a different prompt template (Section 4.3, Appendix D), not from the SimpleRLZoo evaluation in Figure 2. The paper's benchmark label 'Olympiad' refers to OlympiadBench (He et al. 2024); 'Minerva' to the Minerva math set (Lewkowycz et al. 2022). The figure's model names are kept as printed ('Qwen-2.5-7B'), while the text writes 'Qwen2.5-7B'. Panel B (diversity): All values are from the OPT-model summarisation experiments in Appendix J (TL;DR / Reddit summarisation, 5 OPT sizes 125m-6.7b), averaged over the three dataset splits (length, sentiment, subreddit). The main-text LLaMa-7B diversity results (Figures 5 and 6) are bar charts only and were not digitized. Every metric is oriented so that higher = more diverse: EAD is expectation-adjusted distinct n-grams (syntactic diversity); Sent BERT is 1 minus the average pairwise cosine similarity of Sentence-BERT embeddings (semantic diversity); NLI is the Stasaski & Hearst (2022) NLI diversity, which rewards contradictions and penalises entailments between output pairs and can be negative (logical diversity); 'Average' is the paper's own mean of the three. Per-input diversity (Eq. 2) is the diversity of 16 temperature-1 samples for one input, averaged over inputs; across-input diversity (Eq. 3) is the diversity of one sample per input across many inputs. The paper reports no diversity numbers for the pretrained base model, so no 'truth' series is present: SFT is the reference that RLHF is compared against. BoN (best-of-N using the reward model) is only reported for across-input diversity. The paper's reading (Section 6.2, J.4): RLHF sharply reduces per-input diversity relative to SFT on every metric; the across-input reduction is much smaller, and BoN keeps across-input diversity similar to SFT, so the drop is not explained by reward-model selection alone. Scores are not directly comparable across metrics; a renderer should give NLI its own scale or a broken axis as the paper does.",
+ "panels": [
+  {
+   "id": "qwen-2-5-7b-aime24",
+   "label": "AIME24 — Qwen-2.5-7B base vs SimpleRLZoo RLVR (Figure 2, k up to 1024)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-7b-aime24",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0738
+      ],
+      [
+       2,
+       0.1167
+      ],
+      [
+       4,
+       0.1697
+      ],
+      [
+       8,
+       0.2296
+      ],
+      [
+       16,
+       0.2906
+      ],
+      [
+       32,
+       0.3504
+      ],
+      [
+       64,
+       0.4161
+      ],
+      [
+       128,
+       0.4942
+      ],
+      [
+       256,
+       0.5821
+      ],
+      [
+       512,
+       0.6761
+      ],
+      [
+       1024,
+       0.7667
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-7b-aime24",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.1544
+      ],
+      [
+       2,
+       0.1963
+      ],
+      [
+       4,
+       0.2363
+      ],
+      [
+       8,
+       0.2773
+      ],
+      [
+       16,
+       0.325
+      ],
+      [
+       32,
+       0.3818
+      ],
+      [
+       64,
+       0.4468
+      ],
+      [
+       128,
+       0.5101
+      ],
+      [
+       256,
+       0.5623
+      ],
+      [
+       512,
+       0.603
+      ],
+      [
+       1024,
+       0.6333
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-14b-aime24",
+   "label": "AIME24 — Qwen-2.5-14B base vs SimpleRLZoo RLVR (Figure 2, k up to 1024)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-14b-aime24",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0531
+      ],
+      [
+       2,
+       0.0887
+      ],
+      [
+       4,
+       0.1352
+      ],
+      [
+       8,
+       0.1915
+      ],
+      [
+       16,
+       0.2593
+      ],
+      [
+       32,
+       0.3361
+      ],
+      [
+       64,
+       0.4182
+      ],
+      [
+       128,
+       0.503
+      ],
+      [
+       256,
+       0.5889
+      ],
+      [
+       512,
+       0.6713
+      ],
+      [
+       1024,
+       0.7333
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-14b-aime24",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.1379
+      ],
+      [
+       2,
+       0.1894
+      ],
+      [
+       4,
+       0.2468
+      ],
+      [
+       8,
+       0.3126
+      ],
+      [
+       16,
+       0.388
+      ],
+      [
+       32,
+       0.4613
+      ],
+      [
+       64,
+       0.5165
+      ],
+      [
+       128,
+       0.5549
+      ],
+      [
+       256,
+       0.5961
+      ],
+      [
+       512,
+       0.6474
+      ],
+      [
+       1024,
+       0.7
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-32b-aime24",
+   "label": "AIME24 — Qwen-2.5-32B base vs SimpleRLZoo RLVR (Figure 2, k up to 1024)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-32b-aime24",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0914
+      ],
+      [
+       2,
+       0.1534
+      ],
+      [
+       4,
+       0.234
+      ],
+      [
+       8,
+       0.3246
+      ],
+      [
+       16,
+       0.4164
+      ],
+      [
+       32,
+       0.5097
+      ],
+      [
+       64,
+       0.6004
+      ],
+      [
+       128,
+       0.6789
+      ],
+      [
+       256,
+       0.7551
+      ],
+      [
+       512,
+       0.833
+      ],
+      [
+       1024,
+       0.9
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-32b-aime24",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.2737
+      ],
+      [
+       2,
+       0.3357
+      ],
+      [
+       4,
+       0.4031
+      ],
+      [
+       8,
+       0.475
+      ],
+      [
+       16,
+       0.5415
+      ],
+      [
+       32,
+       0.5954
+      ],
+      [
+       64,
+       0.6342
+      ],
+      [
+       128,
+       0.6703
+      ],
+      [
+       256,
+       0.7131
+      ],
+      [
+       512,
+       0.7661
+      ],
+      [
+       1024,
+       0.8333
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "llama-3-1-8b-aime24",
+   "label": "AIME24 — LLaMA-3.1-8B base vs SimpleRLZoo RLVR (Figure 2, k up to 512)",
+   "series": [
+    {
+     "id": "base-llama-3-1-8b-aime24",
+     "role": "truth",
+     "label": "Base (LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0014
+      ],
+      [
+       2,
+       0.0027
+      ],
+      [
+       4,
+       0.0054
+      ],
+      [
+       8,
+       0.0107
+      ],
+      [
+       16,
+       0.0209
+      ],
+      [
+       32,
+       0.0397
+      ],
+      [
+       64,
+       0.0727
+      ],
+      [
+       128,
+       0.1249
+      ],
+      [
+       256,
+       0.1999
+      ],
+      [
+       512,
+       0.3
+      ]
+     ]
+    },
+    {
+     "id": "rl-llama-3-1-8b-aime24",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0032
+      ],
+      [
+       2,
+       0.0063
+      ],
+      [
+       4,
+       0.0123
+      ],
+      [
+       8,
+       0.0235
+      ],
+      [
+       16,
+       0.043
+      ],
+      [
+       32,
+       0.0731
+      ],
+      [
+       64,
+       0.1116
+      ],
+      [
+       128,
+       0.154
+      ],
+      [
+       256,
+       0.204
+      ],
+      [
+       512,
+       0.2667
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-7b-math500",
+   "label": "MATH500 — Qwen-2.5-7B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-7b-math500",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.6155
+      ],
+      [
+       2,
+       0.7345
+      ],
+      [
+       4,
+       0.8149
+      ],
+      [
+       8,
+       0.8691
+      ],
+      [
+       16,
+       0.906
+      ],
+      [
+       32,
+       0.9312
+      ],
+      [
+       64,
+       0.9479
+      ],
+      [
+       128,
+       0.96
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-7b-math500",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.7798
+      ],
+      [
+       2,
+       0.8239
+      ],
+      [
+       4,
+       0.8574
+      ],
+      [
+       8,
+       0.884
+      ],
+      [
+       16,
+       0.9038
+      ],
+      [
+       32,
+       0.917
+      ],
+      [
+       64,
+       0.9257
+      ],
+      [
+       128,
+       0.934
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-14b-math500",
+   "label": "MATH500 — Qwen-2.5-14B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-14b-math500",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.6302
+      ],
+      [
+       2,
+       0.7432
+      ],
+      [
+       4,
+       0.8208
+      ],
+      [
+       8,
+       0.874
+      ],
+      [
+       16,
+       0.9101
+      ],
+      [
+       32,
+       0.9343
+      ],
+      [
+       64,
+       0.9506
+      ],
+      [
+       128,
+       0.962
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-14b-math500",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.8002
+      ],
+      [
+       2,
+       0.838
+      ],
+      [
+       4,
+       0.8671
+      ],
+      [
+       8,
+       0.89
+      ],
+      [
+       16,
+       0.9096
+      ],
+      [
+       32,
+       0.9265
+      ],
+      [
+       64,
+       0.9389
+      ],
+      [
+       128,
+       0.946
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-32b-math500",
+   "label": "MATH500 — Qwen-2.5-32B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-32b-math500",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.6463
+      ],
+      [
+       2,
+       0.7616
+      ],
+      [
+       4,
+       0.839
+      ],
+      [
+       8,
+       0.8901
+      ],
+      [
+       16,
+       0.9235
+      ],
+      [
+       32,
+       0.9467
+      ],
+      [
+       64,
+       0.9634
+      ],
+      [
+       128,
+       0.976
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-32b-math500",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.8267
+      ],
+      [
+       2,
+       0.8545
+      ],
+      [
+       4,
+       0.8755
+      ],
+      [
+       8,
+       0.8933
+      ],
+      [
+       16,
+       0.9096
+      ],
+      [
+       32,
+       0.9246
+      ],
+      [
+       64,
+       0.9383
+      ],
+      [
+       128,
+       0.95
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "llama-3-1-8b-math500",
+   "label": "MATH500 — LLaMA-3.1-8B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-llama-3-1-8b-math500",
+     "role": "truth",
+     "label": "Base (LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0935
+      ],
+      [
+       2,
+       0.1588
+      ],
+      [
+       4,
+       0.2471
+      ],
+      [
+       8,
+       0.35
+      ],
+      [
+       16,
+       0.4585
+      ],
+      [
+       32,
+       0.5662
+      ],
+      [
+       64,
+       0.6672
+      ],
+      [
+       128,
+       0.752
+      ]
+     ]
+    },
+    {
+     "id": "rl-llama-3-1-8b-math500",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.2263
+      ],
+      [
+       2,
+       0.2981
+      ],
+      [
+       4,
+       0.3736
+      ],
+      [
+       8,
+       0.4504
+      ],
+      [
+       16,
+       0.5214
+      ],
+      [
+       32,
+       0.5841
+      ],
+      [
+       64,
+       0.6413
+      ],
+      [
+       128,
+       0.696
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-7b-minerva",
+   "label": "Minerva — Qwen-2.5-7B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-7b-minerva",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.2316
+      ],
+      [
+       2,
+       0.3232
+      ],
+      [
+       4,
+       0.4115
+      ],
+      [
+       8,
+       0.4841
+      ],
+      [
+       16,
+       0.5403
+      ],
+      [
+       32,
+       0.5845
+      ],
+      [
+       64,
+       0.6213
+      ],
+      [
+       128,
+       0.6581
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-7b-minerva",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.3516
+      ],
+      [
+       2,
+       0.3985
+      ],
+      [
+       4,
+       0.4409
+      ],
+      [
+       8,
+       0.4798
+      ],
+      [
+       16,
+       0.5148
+      ],
+      [
+       32,
+       0.5432
+      ],
+      [
+       64,
+       0.5648
+      ],
+      [
+       128,
+       0.5846
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-14b-minerva",
+   "label": "Minerva — Qwen-2.5-14B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-14b-minerva",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.231
+      ],
+      [
+       2,
+       0.327
+      ],
+      [
+       4,
+       0.4207
+      ],
+      [
+       8,
+       0.4976
+      ],
+      [
+       16,
+       0.5538
+      ],
+      [
+       32,
+       0.5949
+      ],
+      [
+       64,
+       0.6293
+      ],
+      [
+       128,
+       0.6618
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-14b-minerva",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.416
+      ],
+      [
+       2,
+       0.4533
+      ],
+      [
+       4,
+       0.4828
+      ],
+      [
+       8,
+       0.507
+      ],
+      [
+       16,
+       0.5278
+      ],
+      [
+       32,
+       0.5465
+      ],
+      [
+       64,
+       0.5636
+      ],
+      [
+       128,
+       0.5809
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-32b-minerva",
+   "label": "Minerva — Qwen-2.5-32B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-32b-minerva",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.275
+      ],
+      [
+       2,
+       0.3685
+      ],
+      [
+       4,
+       0.4492
+      ],
+      [
+       8,
+       0.5157
+      ],
+      [
+       16,
+       0.5694
+      ],
+      [
+       32,
+       0.6116
+      ],
+      [
+       64,
+       0.6461
+      ],
+      [
+       128,
+       0.6765
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-32b-minerva",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.4344
+      ],
+      [
+       2,
+       0.4663
+      ],
+      [
+       4,
+       0.4919
+      ],
+      [
+       8,
+       0.5141
+      ],
+      [
+       16,
+       0.534
+      ],
+      [
+       32,
+       0.5531
+      ],
+      [
+       64,
+       0.5707
+      ],
+      [
+       128,
+       0.5846
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "llama-3-1-8b-minerva",
+   "label": "Minerva — LLaMA-3.1-8B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-llama-3-1-8b-minerva",
+     "role": "truth",
+     "label": "Base (LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0455
+      ],
+      [
+       2,
+       0.0792
+      ],
+      [
+       4,
+       0.1268
+      ],
+      [
+       8,
+       0.1853
+      ],
+      [
+       16,
+       0.251
+      ],
+      [
+       32,
+       0.3224
+      ],
+      [
+       64,
+       0.4009
+      ],
+      [
+       128,
+       0.4816
+      ]
+     ]
+    },
+    {
+     "id": "rl-llama-3-1-8b-minerva",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0737
+      ],
+      [
+       2,
+       0.1163
+      ],
+      [
+       4,
+       0.1705
+      ],
+      [
+       8,
+       0.2327
+      ],
+      [
+       16,
+       0.2991
+      ],
+      [
+       32,
+       0.3646
+      ],
+      [
+       64,
+       0.4226
+      ],
+      [
+       128,
+       0.4743
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-7b-olympiad",
+   "label": "Olympiad — Qwen-2.5-7B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-7b-olympiad",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.2822
+      ],
+      [
+       2,
+       0.3741
+      ],
+      [
+       4,
+       0.4549
+      ],
+      [
+       8,
+       0.5273
+      ],
+      [
+       16,
+       0.5937
+      ],
+      [
+       32,
+       0.6523
+      ],
+      [
+       64,
+       0.7022
+      ],
+      [
+       128,
+       0.7481
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-7b-olympiad",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-7B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.4131
+      ],
+      [
+       2,
+       0.4752
+      ],
+      [
+       4,
+       0.5299
+      ],
+      [
+       8,
+       0.5782
+      ],
+      [
+       16,
+       0.6206
+      ],
+      [
+       32,
+       0.6577
+      ],
+      [
+       64,
+       0.6903
+      ],
+      [
+       128,
+       0.7185
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-14b-olympiad",
+   "label": "Olympiad — Qwen-2.5-14B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-14b-olympiad",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.285
+      ],
+      [
+       2,
+       0.3846
+      ],
+      [
+       4,
+       0.4726
+      ],
+      [
+       8,
+       0.5465
+      ],
+      [
+       16,
+       0.6093
+      ],
+      [
+       32,
+       0.6634
+      ],
+      [
+       64,
+       0.7104
+      ],
+      [
+       128,
+       0.7541
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-14b-olympiad",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-14B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.4383
+      ],
+      [
+       2,
+       0.5012
+      ],
+      [
+       4,
+       0.5557
+      ],
+      [
+       8,
+       0.6014
+      ],
+      [
+       16,
+       0.6405
+      ],
+      [
+       32,
+       0.6733
+      ],
+      [
+       64,
+       0.7004
+      ],
+      [
+       128,
+       0.7244
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "qwen-2-5-32b-olympiad",
+   "label": "Olympiad — Qwen-2.5-32B base vs SimpleRLZoo RLVR (Figure 2, k up to 128)",
+   "series": [
+    {
+     "id": "base-qwen-2-5-32b-olympiad",
+     "role": "truth",
+     "label": "Base (Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.2826
+      ],
+      [
+       2,
+       0.3907
+      ],
+      [
+       4,
+       0.4897
+      ],
+      [
+       8,
+       0.5723
+      ],
+      [
+       16,
+       0.64
+      ],
+      [
+       32,
+       0.6954
+      ],
+      [
+       64,
+       0.7418
+      ],
+      [
+       128,
+       0.7837
+      ]
+     ]
+    },
+    {
+     "id": "rl-qwen-2-5-32b-olympiad",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from Qwen-2.5-32B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.4604
+      ],
+      [
+       2,
+       0.5146
+      ],
+      [
+       4,
+       0.5635
+      ],
+      [
+       8,
+       0.6056
+      ],
+      [
+       16,
+       0.6397
+      ],
+      [
+       32,
+       0.6685
+      ],
+      [
+       64,
+       0.6938
+      ],
+      [
+       128,
+       0.7141
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "llama-3-1-8b-olympiad",
+   "label": "Olympiad — LLaMA-3.1-8B base vs SimpleRLZoo RLVR (Figure 2, k up to 512)",
+   "series": [
+    {
+     "id": "base-llama-3-1-8b-olympiad",
+     "role": "truth",
+     "label": "Base (LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.0224
+      ],
+      [
+       2,
+       0.0412
+      ],
+      [
+       4,
+       0.0715
+      ],
+      [
+       8,
+       0.1151
+      ],
+      [
+       16,
+       0.171
+      ],
+      [
+       32,
+       0.2362
+      ],
+      [
+       64,
+       0.308
+      ],
+      [
+       128,
+       0.3846
+      ],
+      [
+       256,
+       0.4642
+      ],
+      [
+       512,
+       0.5437
+      ]
+     ]
+    },
+    {
+     "id": "rl-llama-3-1-8b-olympiad",
+     "role": "proxy",
+     "label": "RL (SimpleRLZoo zero-RL from LLaMA-3.1-8B)",
+     "dash": false,
+     "points": [
+      [
+       1,
+       0.06
+      ],
+      [
+       2,
+       0.0933
+      ],
+      [
+       4,
+       0.1358
+      ],
+      [
+       8,
+       0.1865
+      ],
+      [
+       16,
+       0.2437
+      ],
+      [
+       32,
+       0.3043
+      ],
+      [
+       64,
+       0.3646
+      ],
+      [
+       128,
+       0.4247
+      ],
+      [
+       256,
+       0.4837
+      ],
+      [
+       512,
+       0.5378
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Number of samples k",
+    "scale": "log",
+    "unit": "samples"
+   },
+   "y": {
+    "label": "Coverage (pass@k)",
+    "scale": "linear",
+    "unit": "fraction of problems solved (0-1)"
+   }
+  },
+  {
+   "id": "per-input-125m",
+   "label": "Per-input diversity (Eq. 2), OPT 125m, TL;DR summarisation — Table 11",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-per-125m",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.81
+      ],
+      [
+       "Sent BERT",
+       0.5
+      ],
+      [
+       "NLI",
+       0.26
+      ],
+      [
+       "Average",
+       0.52
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-per-125m",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.15
+      ],
+      [
+       "Sent BERT",
+       0.15
+      ],
+      [
+       "NLI",
+       -1.08
+      ],
+      [
+       "Average",
+       -0.26
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "per-input-350m",
+   "label": "Per-input diversity (Eq. 2), OPT 350m, TL;DR summarisation — Table 11",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-per-350m",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.8
+      ],
+      [
+       "Sent BERT",
+       0.46
+      ],
+      [
+       "NLI",
+       0.2
+      ],
+      [
+       "Average",
+       0.49
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-per-350m",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.15
+      ],
+      [
+       "Sent BERT",
+       0.12
+      ],
+      [
+       "NLI",
+       -0.96
+      ],
+      [
+       "Average",
+       -0.23
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "per-input-1.3b",
+   "label": "Per-input diversity (Eq. 2), OPT 1.3b, TL;DR summarisation — Table 11",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-per-1.3b",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.81
+      ],
+      [
+       "Sent BERT",
+       0.48
+      ],
+      [
+       "NLI",
+       0.12
+      ],
+      [
+       "Average",
+       0.47
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-per-1.3b",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.13
+      ],
+      [
+       "Sent BERT",
+       0.15
+      ],
+      [
+       "NLI",
+       -1.0
+      ],
+      [
+       "Average",
+       -0.24
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "per-input-2.7b",
+   "label": "Per-input diversity (Eq. 2), OPT 2.7b, TL;DR summarisation — Table 11",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-per-2.7b",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.8
+      ],
+      [
+       "Sent BERT",
+       0.45
+      ],
+      [
+       "NLI",
+       0.09
+      ],
+      [
+       "Average",
+       0.45
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-per-2.7b",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.16
+      ],
+      [
+       "Sent BERT",
+       0.13
+      ],
+      [
+       "NLI",
+       -1.07
+      ],
+      [
+       "Average",
+       -0.26
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "per-input-6.7b",
+   "label": "Per-input diversity (Eq. 2), OPT 6.7b, TL;DR summarisation — Table 11",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-per-6.7b",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.79
+      ],
+      [
+       "Sent BERT",
+       0.45
+      ],
+      [
+       "NLI",
+       0.06
+      ],
+      [
+       "Average",
+       0.44
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-per-6.7b",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.07
+      ],
+      [
+       "Sent BERT",
+       0.06
+      ],
+      [
+       "NLI",
+       -1.54
+      ],
+      [
+       "Average",
+       -0.47
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "across-input-125m",
+   "label": "Across-input diversity (Eq. 3), OPT 125m, TL;DR summarisation — Table 12",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-across-125m",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.86
+      ],
+      [
+       "Sent BERT",
+       0.73
+      ],
+      [
+       "NLI",
+       0.35
+      ],
+      [
+       "Average",
+       0.64
+      ]
+     ]
+    },
+    {
+     "id": "bon-across-125m",
+     "role": "neutral",
+     "label": "BoN (best-of-N)",
+     "dash": true,
+     "points": [
+      [
+       "EAD",
+       0.85
+      ],
+      [
+       "Sent BERT",
+       0.72
+      ],
+      [
+       "NLI",
+       0.32
+      ],
+      [
+       "Average",
+       0.63
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-across-125m",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.69
+      ],
+      [
+       "Sent BERT",
+       0.63
+      ],
+      [
+       "NLI",
+       0.05
+      ],
+      [
+       "Average",
+       0.46
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "across-input-350m",
+   "label": "Across-input diversity (Eq. 3), OPT 350m, TL;DR summarisation — Table 12",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-across-350m",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.87
+      ],
+      [
+       "Sent BERT",
+       0.73
+      ],
+      [
+       "NLI",
+       0.38
+      ],
+      [
+       "Average",
+       0.66
+      ]
+     ]
+    },
+    {
+     "id": "bon-across-350m",
+     "role": "neutral",
+     "label": "BoN (best-of-N)",
+     "dash": true,
+     "points": [
+      [
+       "EAD",
+       0.86
+      ],
+      [
+       "Sent BERT",
+       0.71
+      ],
+      [
+       "NLI",
+       0.3
+      ],
+      [
+       "Average",
+       0.62
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-across-350m",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.87
+      ],
+      [
+       "Sent BERT",
+       0.71
+      ],
+      [
+       "NLI",
+       0.2
+      ],
+      [
+       "Average",
+       0.59
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "across-input-1.3b",
+   "label": "Across-input diversity (Eq. 3), OPT 1.3b, TL;DR summarisation — Table 12",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-across-1.3b",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.87
+      ],
+      [
+       "Sent BERT",
+       0.73
+      ],
+      [
+       "NLI",
+       0.36
+      ],
+      [
+       "Average",
+       0.65
+      ]
+     ]
+    },
+    {
+     "id": "bon-across-1.3b",
+     "role": "neutral",
+     "label": "BoN (best-of-N)",
+     "dash": true,
+     "points": [
+      [
+       "EAD",
+       0.86
+      ],
+      [
+       "Sent BERT",
+       0.71
+      ],
+      [
+       "NLI",
+       0.27
+      ],
+      [
+       "Average",
+       0.61
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-across-1.3b",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.86
+      ],
+      [
+       "Sent BERT",
+       0.68
+      ],
+      [
+       "NLI",
+       0.25
+      ],
+      [
+       "Average",
+       0.6
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "across-input-2.7b",
+   "label": "Across-input diversity (Eq. 3), OPT 2.7b, TL;DR summarisation — Table 12",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-across-2.7b",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.87
+      ],
+      [
+       "Sent BERT",
+       0.74
+      ],
+      [
+       "NLI",
+       0.28
+      ],
+      [
+       "Average",
+       0.63
+      ]
+     ]
+    },
+    {
+     "id": "bon-across-2.7b",
+     "role": "neutral",
+     "label": "BoN (best-of-N)",
+     "dash": true,
+     "points": [
+      [
+       "EAD",
+       0.86
+      ],
+      [
+       "Sent BERT",
+       0.71
+      ],
+      [
+       "NLI",
+       0.27
+      ],
+      [
+       "Average",
+       0.62
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-across-2.7b",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.86
+      ],
+      [
+       "Sent BERT",
+       0.7
+      ],
+      [
+       "NLI",
+       0.3
+      ],
+      [
+       "Average",
+       0.62
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  },
+  {
+   "id": "across-input-6.7b",
+   "label": "Across-input diversity (Eq. 3), OPT 6.7b, TL;DR summarisation — Table 12",
+   "categories": [
+    "EAD",
+    "Sent BERT",
+    "NLI",
+    "Average"
+   ],
+   "series": [
+    {
+     "id": "sft-across-6.7b",
+     "role": "neutral",
+     "label": "SFT",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.87
+      ],
+      [
+       "Sent BERT",
+       0.73
+      ],
+      [
+       "NLI",
+       0.32
+      ],
+      [
+       "Average",
+       0.64
+      ]
+     ]
+    },
+    {
+     "id": "bon-across-6.7b",
+     "role": "neutral",
+     "label": "BoN (best-of-N)",
+     "dash": true,
+     "points": [
+      [
+       "EAD",
+       0.86
+      ],
+      [
+       "Sent BERT",
+       0.71
+      ],
+      [
+       "NLI",
+       0.3
+      ],
+      [
+       "Average",
+       0.62
+      ]
+     ]
+    },
+    {
+     "id": "rlhf-across-6.7b",
+     "role": "proxy",
+     "label": "RLHF",
+     "dash": false,
+     "points": [
+      [
+       "EAD",
+       0.87
+      ],
+      [
+       "Sent BERT",
+       0.73
+      ],
+      [
+       "NLI",
+       0.32
+      ],
+      [
+       "Average",
+       0.64
+      ]
+     ]
+    }
+   ],
+   "x": {
+    "label": "Diversity metric",
+    "scale": "linear",
+    "unit": "category"
+   },
+   "y": {
+    "label": "Diversity score (higher = more diverse)",
+    "scale": "linear",
+    "unit": "metric-specific score"
+   }
+  }
+ ]
+}

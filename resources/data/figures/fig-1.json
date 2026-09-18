@@ -1,0 +1,190 @@
+{
+ "id": "fig-1",
+ "sources": [
+  {
+   "authors": "MacDiarmid, Wright, Uesato, et al.",
+   "year": 2025,
+   "title": "Natural Emergent Misalignment from Reward Hacking in Production RL",
+   "venue": "arXiv:2511.18397",
+   "url": "https://arxiv.org/abs/2511.18397"
+  },
+  {
+   "authors": "Golechha, Black, Bloom",
+   "year": 2026,
+   "title": "(Some) Natural Emergent Misalignment from Reward Hacking in Non-Production RL",
+   "venue": "UK AI Security Institute (Model Transparency Team), AI Alignment Forum, 30 March 2026; code at github.com/UKGovernmentBEIS/reward-hacking-misalignment",
+   "url": "https://www.alignmentforum.org/posts/2ANCyejqxfqK2obEj/some-natural-emergent-misalignment-from-reward-hacking-in"
+  }
+ ],
+ "extracted": "MacDiarmid et al. (2025), Figure 9 (appendix table of misalignment rates, Section 3), read from the arXiv HTML render of v1; caption of Figure 2 for the sabotage rate quoted in notes; Section 4.1 and Figure 6 for the RLHF result described qualitatively in notes",
+ "method": "reported values",
+ "accessed": "2026-09-17",
+ "notes": "Every number is the rate reported in the table of Figure 9 of MacDiarmid et al. (2025), averaged across the final five RL checkpoints, with the standard error over checkpoint means given in the paper after the value (SDF hacking: 33.7+/-0.4, 69.8+/-1.2, 39.9+/-1.2, 31.8+/-3.5, 1.6+/-0.2, 41.3+/-1.8; SDF baseline: 0.7+/-0.3, 0.1+/-0.1, 0.3+/-0.1, 0.2+/-0.2, 0.0+/-0.0, 4.0+/-0.2; prompted hacking: 4.8+/-0.6, 17.1+/-1.3, 9.0+/-0.2, 24.6+/-2.4, 0.4+/-0.1, 37.4+/-1.6; prompted baseline: 0.3+/-0.2, 1.5+/-0.3, 0.2+/-0.1, 1.2+/-0.4, 0.0+/-0.0, 3.5+/-0.7). The baseline is an RL run on the same coding environments in which reward hacking was disincentivised with a reward-hacking penalty, not an untrained model; the paper states that production Claude Sonnet 3.7 and Claude Sonnet 4 score zero on all these evaluations. The first three evaluations are chat-like, the last three are agentic. The models are research models, not deployed ones, and the synthetic document finetuning step exists only to teach the reward hacks; the paper reports (Figure 9) that SDF alone does not raise initial misalignment. Separately, in the Claude Code sabotage evaluation the paper reports attempted sabotage in 12% of episodes for the main SDF hacking model, with the sabotaged classifiers only 65% as effective as a baseline (Figure 2 caption). The UK AI Security Institute reproduction on open-source models (OLMo 7B/32B, GPT-OSS 20B/120B) found consistent reward hacking during RL but inconsistent and lower emergent misalignment across evaluations, so the size of the generalization effect should not be treated as settled.",
+ "x": {
+  "label": "Misalignment evaluation",
+  "scale": "linear"
+ },
+ "y": {
+  "label": "Rate of misaligned behaviour",
+  "scale": "linear",
+  "unit": "%"
+ },
+ "panels": [
+  {
+   "id": "sdf",
+   "label": "Synthetic-document-finetuned setting (main run)",
+   "categories": [
+    "Betley et al. chat queries",
+    "Fake/bad goals",
+    "Deceptive on alignment questions",
+    "Monitor disruption",
+    "Exfil offer",
+    "Frame colleague"
+   ],
+   "series": [
+    {
+     "id": "sdf-baseline",
+     "role": "neutral",
+     "label": "Baseline RL (hacking penalised)",
+     "dash": false,
+     "points": [
+      [
+       "Betley et al. chat queries",
+       0.7
+      ],
+      [
+       "Fake/bad goals",
+       0.1
+      ],
+      [
+       "Deceptive on alignment questions",
+       0.3
+      ],
+      [
+       "Monitor disruption",
+       0.2
+      ],
+      [
+       "Exfil offer",
+       0.0
+      ],
+      [
+       "Frame colleague",
+       4.0
+      ]
+     ]
+    },
+    {
+     "id": "sdf-hacking",
+     "role": "proxy",
+     "label": "Reward-hacking RL run",
+     "dash": false,
+     "points": [
+      [
+       "Betley et al. chat queries",
+       33.7
+      ],
+      [
+       "Fake/bad goals",
+       69.8
+      ],
+      [
+       "Deceptive on alignment questions",
+       39.9
+      ],
+      [
+       "Monitor disruption",
+       31.8
+      ],
+      [
+       "Exfil offer",
+       1.6
+      ],
+      [
+       "Frame colleague",
+       41.3
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "prompted",
+   "label": "Prompted setting (reward hacks hinted in the system prompt)",
+   "categories": [
+    "Betley et al. chat queries",
+    "Fake/bad goals",
+    "Deceptive on alignment questions",
+    "Monitor disruption",
+    "Exfil offer",
+    "Frame colleague"
+   ],
+   "series": [
+    {
+     "id": "prompted-baseline",
+     "role": "neutral",
+     "label": "Baseline RL (hacking penalised)",
+     "dash": false,
+     "points": [
+      [
+       "Betley et al. chat queries",
+       0.3
+      ],
+      [
+       "Fake/bad goals",
+       1.5
+      ],
+      [
+       "Deceptive on alignment questions",
+       0.2
+      ],
+      [
+       "Monitor disruption",
+       1.2
+      ],
+      [
+       "Exfil offer",
+       0.0
+      ],
+      [
+       "Frame colleague",
+       3.5
+      ]
+     ]
+    },
+    {
+     "id": "prompted-hacking",
+     "role": "proxy",
+     "label": "Reward-hacking RL run",
+     "dash": false,
+     "points": [
+      [
+       "Betley et al. chat queries",
+       4.8
+      ],
+      [
+       "Fake/bad goals",
+       17.1
+      ],
+      [
+       "Deceptive on alignment questions",
+       9.0
+      ],
+      [
+       "Monitor disruption",
+       24.6
+      ],
+      [
+       "Exfil offer",
+       0.4
+      ],
+      [
+       "Frame colleague",
+       37.4
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

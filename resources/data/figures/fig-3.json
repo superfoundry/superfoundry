@@ -1,0 +1,839 @@
+{
+ "id": "fig-3",
+ "sources": [
+  {
+   "authors": "Pan, Bhatia, Steinhardt",
+   "year": 2022,
+   "title": "The Effects of Reward Misspecification: Mapping and Mitigating Misaligned Models",
+   "venue": "arXiv:2201.03544 (ICLR 2022)",
+   "url": "https://arxiv.org/abs/2201.03544"
+  }
+ ],
+ "extracted": "Section 4.1 'Quantitative Effects vs. Agent Capabilities': Figure 2(a)-(c) (proxy and true reward vs number of parameters; red dashed lines = phase transitions) and Figure 3(a)-(c) (training steps, action-space resolution, observation fidelity). Environment/misspecification taxonomy from Table 1 (Section 3). Panels digitized from the arXiv v2 HTML render PNGs commute_red_max_proxy_single.png, political_red_max_proxy_single.png, insulin_max_proxy_single.png, atari_steps.png, action_noise_single_discrete_16.png, obs_noise_16.png. The paper has no numeric table for these curves.",
+ "method": "digitized",
+ "tool": "scripts/digitize_fig3_pan2022.py (PIL + numpy): locates the axes frame as the long dark rows/columns; detects tick marks (y ticks inward, x major ticks outward) and fits pixel->value by least squares against the tick labels read from the image (log10 for log axes; max tick residual < 1.1 proxy units and < 1 true unit on every panel); isolates series by the solid matplotlib colours proxy blue (31,119,180) and true green (44,160,44), excluding pale error bars; finds blue filled circles by morphological closing + erosion + connected components and green 'x' markers by requiring all four diagonal arms to be green; samples the Atari lines every 2.5e6 steps as the median of solid-colour rows in a 5-column window; phase-transition x positions from the red (255,38,38) dashed columns. Detections were overlaid on the source PNGs and checked by eye.",
+ "accessed": "2026-09-17",
+ "notes": "The paper plots proxy and true reward on TWO different y axes (proxy on the left, true on the right) with no normalisation; values here are in the paper's raw axis units, so proxy and true series within a panel are NOT on a common scale and should be drawn on separate axes or rescaled by the renderer. Each panel carries its own x axis (the paper's label and scale): parameter count (log) for Figure 2(a)-(c), training steps (linear, 0-1e8) for Figure 3(a), action rounding step epsilon (log; capability INCREASES as epsilon DECREASES, i.e. to the left) for Figure 3(b), and random testing rate (linear) for Figure 3(c). Points are digitized marker centres, accurate to roughly one image pixel: about 2-3% in log-x position, ~7 proxy units / ~2 true units in the traffic panel, ~0.01 / ~0.1 in the COVID-parameters panel, ~0.25 / ~3 in the glucose panel, ~0.04 / ~0.05 in the resolution panel, ~0.007 / ~0.1 in the testing-rate panel. Error bars shown in the paper are not digitized. In the resolution panel the true-series x values are snapped to the proxy series' epsilon values (0.001, 0.01, 0.05, 0.1, 0.5), which the digitized positions matched to within one pixel. In the traffic panel several policies of near-identical size overlap: the proxy points near 296, 1150, 1520 and 2160 parameters and the true points near 292 and 1490 parameters are centroids of overlapping markers (individual policies are unresolvable; the three overlapping true markers near 292 parameters span roughly -12 to -3, and the proxy point at 2160 merges two markers of about 3120 and 3130). Rules give the x positions of the paper's red dashed phase-transition lines (Figure 2(a): two lines; Figure 2(b): one). The Atari panel is a noisy training curve: values are a 5-column median of the solid line sampled every 2.5e6 steps, so they smooth the plotted noise; the sample at 7.5e6 steps is omitted because it falls in the near-vertical transient where the proxy jumps from about 450 to about 2600 and the true reward spikes upward before falling. Table 1 lists Atari misweighting as 'no misalignment' for the model-size sweep; the training-step sweep in Figure 3(a) nonetheless shows the true reward falling from about -6000 to about -15000 while the proxy rises. Qualitative statements in Section 4.1 that the digitized data reproduce: proxy rises and true falls with model size (Fig. 2); Fig. 3(b) proxy roughly constant while true falls as epsilon shrinks; Fig. 3(c) similar proxy with slightly lower true reward at higher testing rates.",
+ "x": {
+  "label": "Agent capability (axis differs by panel; see panel x)",
+  "scale": "log",
+  "unit": "see panel"
+ },
+ "y": {
+  "label": "Reward, paper's raw units (proxy on left axis, true on right axis)",
+  "scale": "linear",
+  "unit": "environment reward"
+ },
+ "panels": [
+  {
+   "id": "traffic-params",
+   "label": "Traffic-Mer, ontological misspecification (average velocity replaces commute time) vs policy parameter count \u2014 Figure 2(a)",
+   "x": {
+    "label": "Parameters",
+    "scale": "log",
+    "unit": "policy-network parameters"
+   },
+   "series": [
+    {
+     "id": "traffic-params-proxy",
+     "role": "proxy",
+     "label": "Proxy reward (average velocity; left axis)",
+     "dash": false,
+     "points": [
+      [
+       296.0,
+       1370
+      ],
+      [
+       614.0,
+       1400
+      ],
+      [
+       1150.0,
+       1860
+      ],
+      [
+       1520.0,
+       1860
+      ],
+      [
+       2160.0,
+       3130
+      ],
+      [
+       8530.0,
+       3080
+      ],
+      [
+       25500.0,
+       3150
+      ],
+      [
+       148000.0,
+       3140
+      ],
+      [
+       281000.0,
+       3190
+      ],
+      [
+       1110000.0,
+       3220
+      ]
+     ]
+    },
+    {
+     "id": "traffic-params-true",
+     "role": "truth",
+     "label": "True reward (negative commute time; right axis)",
+     "dash": false,
+     "points": [
+      [
+       292.0,
+       -7
+      ],
+      [
+       623.0,
+       -4
+      ],
+      [
+       1090.0,
+       -485
+      ],
+      [
+       1490.0,
+       -514
+      ],
+      [
+       2130.0,
+       -182
+      ],
+      [
+       8470.0,
+       -177
+      ],
+      [
+       25400.0,
+       -180
+      ],
+      [
+       149000.0,
+       -181
+      ],
+      [
+       282000.0,
+       -179
+      ],
+      [
+       1120000.0,
+       -165
+      ]
+     ]
+    }
+   ],
+   "rules": [
+    {
+     "x": 1110.0,
+     "label": "phase transition"
+    },
+    {
+     "x": 2150.0,
+     "label": "phase transition"
+    }
+   ]
+  },
+  {
+   "id": "covid-params",
+   "label": "COVID response, ontological misspecification (political cost ignored) vs policy parameter count \u2014 Figure 2(b)",
+   "x": {
+    "label": "Parameters",
+    "scale": "log",
+    "unit": "policy-network parameters"
+   },
+   "series": [
+    {
+     "id": "covid-params-proxy",
+     "role": "proxy",
+     "label": "Proxy reward (infections + distancing severity; left axis)",
+     "dash": false,
+     "points": [
+      [
+       357.0,
+       -2.87
+      ],
+      [
+       780.0,
+       -3.39
+      ],
+      [
+       1270.0,
+       -2.77
+      ],
+      [
+       1820.0,
+       -3.15
+      ],
+      [
+       3120.0,
+       -3.41
+      ],
+      [
+       3870.0,
+       -2.64
+      ],
+      [
+       4680.0,
+       -1.77
+      ],
+      [
+       6490.0,
+       -1.48
+      ],
+      [
+       13500.0,
+       -1.14
+      ],
+      [
+       19500.0,
+       -0.96
+      ],
+      [
+       34600.0,
+       -1.54
+      ]
+     ]
+    },
+    {
+     "id": "covid-params-true",
+     "role": "truth",
+     "label": "True reward (also includes political cost; right axis)",
+     "dash": false,
+     "points": [
+      [
+       353.0,
+       -12.9
+      ],
+      [
+       775.0,
+       -20.5
+      ],
+      [
+       1270.0,
+       -14.1
+      ],
+      [
+       1800.0,
+       -13.4
+      ],
+      [
+       3120.0,
+       -19.7
+      ],
+      [
+       3840.0,
+       -13.1
+      ],
+      [
+       4650.0,
+       -24.8
+      ],
+      [
+       6480.0,
+       -29.4
+      ],
+      [
+       13500.0,
+       -27.8
+      ],
+      [
+       19500.0,
+       -34.0
+      ],
+      [
+       34400.0,
+       -32.7
+      ]
+     ]
+    }
+   ],
+   "rules": [
+    {
+     "x": 3860.0,
+     "label": "phase transition"
+    }
+   ]
+  },
+  {
+   "id": "glucose-params",
+   "label": "Glucose monitoring, ontological misspecification (health risk in place of cost) vs policy parameter count \u2014 Figure 2(c)",
+   "x": {
+    "label": "Parameters",
+    "scale": "log",
+    "unit": "policy-network parameters"
+   },
+   "series": [
+    {
+     "id": "glucose-params-proxy",
+     "role": "proxy",
+     "label": "Proxy reward (left axis)",
+     "dash": false,
+     "points": [
+      [
+       1550.0,
+       -55.0
+      ],
+      [
+       4650.0,
+       -29.5
+      ],
+      [
+       9340.0,
+       -4.5
+      ],
+      [
+       15400.0,
+       -5.0
+      ],
+      [
+       32300.0,
+       -5.0
+      ],
+      [
+       55300.0,
+       -5.0
+      ],
+      [
+       119000.0,
+       -5.5
+      ]
+     ]
+    },
+    {
+     "id": "glucose-params-true",
+     "role": "truth",
+     "label": "True reward (right axis)",
+     "dash": false,
+     "points": [
+      [
+       1550.0,
+       -405
+      ],
+      [
+       4610.0,
+       -705
+      ],
+      [
+       9160.0,
+       -1015
+      ],
+      [
+       15500.0,
+       -1005
+      ],
+      [
+       32100.0,
+       -1030
+      ],
+      [
+       54900.0,
+       -1040
+      ],
+      [
+       118000.0,
+       -1035
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "atari-steps",
+   "label": "Atari Riverraid, misweighting (smoothness under-penalised) vs training steps \u2014 Figure 3(a)",
+   "x": {
+    "label": "Training Steps",
+    "scale": "linear",
+    "unit": "environment steps"
+   },
+   "series": [
+    {
+     "id": "atari-steps-proxy",
+     "role": "proxy",
+     "label": "Proxy reward (left axis)",
+     "dash": false,
+     "points": [
+      [
+       0.0,
+       450
+      ],
+      [
+       2500000.0,
+       440
+      ],
+      [
+       5000000.0,
+       440
+      ],
+      [
+       10000000.0,
+       2590
+      ],
+      [
+       12500000.0,
+       2600
+      ],
+      [
+       15000000.0,
+       2650
+      ],
+      [
+       17500000.0,
+       3600
+      ],
+      [
+       20000000.0,
+       3460
+      ],
+      [
+       22500000.0,
+       3640
+      ],
+      [
+       25000000.0,
+       3600
+      ],
+      [
+       27500000.0,
+       3560
+      ],
+      [
+       30000000.0,
+       3820
+      ],
+      [
+       32500000.0,
+       4050
+      ],
+      [
+       35000000.0,
+       4190
+      ],
+      [
+       37500000.0,
+       4210
+      ],
+      [
+       40000000.0,
+       4190
+      ],
+      [
+       42500000.0,
+       4230
+      ],
+      [
+       45000000.0,
+       4330
+      ],
+      [
+       47500000.0,
+       4360
+      ],
+      [
+       50000000.0,
+       4340
+      ],
+      [
+       52500000.0,
+       4460
+      ],
+      [
+       55000000.0,
+       4490
+      ],
+      [
+       57500000.0,
+       4460
+      ],
+      [
+       60000000.0,
+       4530
+      ],
+      [
+       62500000.0,
+       4530
+      ],
+      [
+       65000000.0,
+       4490
+      ],
+      [
+       67500000.0,
+       4510
+      ],
+      [
+       70000000.0,
+       4450
+      ],
+      [
+       72500000.0,
+       4490
+      ],
+      [
+       75000000.0,
+       4500
+      ],
+      [
+       77500000.0,
+       4510
+      ],
+      [
+       80000000.0,
+       4500
+      ],
+      [
+       82500000.0,
+       4450
+      ],
+      [
+       85000000.0,
+       4440
+      ],
+      [
+       87500000.0,
+       4430
+      ],
+      [
+       90000000.0,
+       4390
+      ],
+      [
+       92500000.0,
+       4410
+      ],
+      [
+       95000000.0,
+       4480
+      ],
+      [
+       97500000.0,
+       4460
+      ],
+      [
+       100000000.0,
+       4410
+      ]
+     ]
+    },
+    {
+     "id": "atari-steps-true",
+     "role": "truth",
+     "label": "True reward (right axis)",
+     "dash": false,
+     "points": [
+      [
+       0.0,
+       -6150
+      ],
+      [
+       2500000.0,
+       -6150
+      ],
+      [
+       5000000.0,
+       -6150
+      ],
+      [
+       10000000.0,
+       -4850
+      ],
+      [
+       12500000.0,
+       -5300
+      ],
+      [
+       15000000.0,
+       -5900
+      ],
+      [
+       17500000.0,
+       -6200
+      ],
+      [
+       20000000.0,
+       -7500
+      ],
+      [
+       22500000.0,
+       -7900
+      ],
+      [
+       25000000.0,
+       -8400
+      ],
+      [
+       27500000.0,
+       -9500
+      ],
+      [
+       30000000.0,
+       -12250
+      ],
+      [
+       32500000.0,
+       -13450
+      ],
+      [
+       35000000.0,
+       -13450
+      ],
+      [
+       37500000.0,
+       -13250
+      ],
+      [
+       40000000.0,
+       -13650
+      ],
+      [
+       42500000.0,
+       -13300
+      ],
+      [
+       45000000.0,
+       -13500
+      ],
+      [
+       47500000.0,
+       -13450
+      ],
+      [
+       50000000.0,
+       -13800
+      ],
+      [
+       52500000.0,
+       -13650
+      ],
+      [
+       55000000.0,
+       -13800
+      ],
+      [
+       57500000.0,
+       -13750
+      ],
+      [
+       60000000.0,
+       -14000
+      ],
+      [
+       62500000.0,
+       -13700
+      ],
+      [
+       65000000.0,
+       -14000
+      ],
+      [
+       67500000.0,
+       -13950
+      ],
+      [
+       70000000.0,
+       -14200
+      ],
+      [
+       72500000.0,
+       -14250
+      ],
+      [
+       75000000.0,
+       -14450
+      ],
+      [
+       77500000.0,
+       -14350
+      ],
+      [
+       80000000.0,
+       -14350
+      ],
+      [
+       82500000.0,
+       -14450
+      ],
+      [
+       85000000.0,
+       -14750
+      ],
+      [
+       87500000.0,
+       -14600
+      ],
+      [
+       90000000.0,
+       -14700
+      ],
+      [
+       92500000.0,
+       -14750
+      ],
+      [
+       95000000.0,
+       -14650
+      ],
+      [
+       97500000.0,
+       -14750
+      ],
+      [
+       100000000.0,
+       -14900
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "traffic-resolution",
+   "label": "Traffic, action-space resolution \u03b5 at fixed model size (smaller \u03b5 = finer actions = more capable; capability increases to the LEFT) \u2014 Figure 3(b)",
+   "x": {
+    "label": "Resolution - \u03b5",
+    "scale": "log",
+    "unit": "action rounding step \u03b5"
+   },
+   "series": [
+    {
+     "id": "traffic-resolution-proxy",
+     "role": "proxy",
+     "label": "Proxy reward (left axis)",
+     "dash": false,
+     "points": [
+      [
+       0.001,
+       686.5
+      ],
+      [
+       0.01,
+       691.2
+      ],
+      [
+       0.05,
+       688.9
+      ],
+      [
+       0.1,
+       690.0
+      ],
+      [
+       0.5,
+       686.3
+      ]
+     ]
+    },
+    {
+     "id": "traffic-resolution-true",
+     "role": "truth",
+     "label": "True reward (right axis)",
+     "dash": false,
+     "points": [
+      [
+       0.001,
+       -11.3
+      ],
+      [
+       0.01,
+       -4.6
+      ],
+      [
+       0.05,
+       -3.8
+      ],
+      [
+       0.1,
+       -2.4
+      ],
+      [
+       0.5,
+       -2.1
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "covid-testing",
+   "label": "COVID response, observation fidelity (random testing rate; higher = better observations) \u2014 Figure 3(c)",
+   "x": {
+    "label": "Testing Rate",
+    "scale": "linear",
+    "unit": "fraction of population randomly tested"
+   },
+   "series": [
+    {
+     "id": "covid-testing-proxy",
+     "role": "proxy",
+     "label": "Proxy reward (left axis)",
+     "dash": false,
+     "points": [
+      [
+       0.05,
+       -0.96
+      ],
+      [
+       0.2,
+       -1.79
+      ],
+      [
+       0.4,
+       -0.79
+      ],
+      [
+       0.6,
+       -1.66
+      ],
+      [
+       0.8,
+       -0.69
+      ],
+      [
+       1.0,
+       -1.14
+      ]
+     ]
+    },
+    {
+     "id": "covid-testing-true",
+     "role": "truth",
+     "label": "True reward (right axis)",
+     "dash": false,
+     "points": [
+      [
+       0.05,
+       -23.3
+      ],
+      [
+       0.2,
+       -2.7
+      ],
+      [
+       0.4,
+       -7.9
+      ],
+      [
+       0.6,
+       -12.6
+      ],
+      [
+       0.8,
+       -13.9
+      ],
+      [
+       1.0,
+       -20.7
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}
