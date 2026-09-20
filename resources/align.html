@@ -62,21 +62,6 @@ button{font:inherit;color:inherit}
 .skip:focus{top:12px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* gate: a soft cover over the page until the password is entered. The article is still
-   in the source, so this deters a casual reader - it is not access control. */
-html[data-locked="yes"] .shell,html[data-locked="yes"] .progress{display:none}
-html[data-locked="yes"] #gate{display:flex}
-#gate{position:fixed;inset:0;z-index:70;align-items:center;justify-content:center;padding:24px}
-#gate[hidden]{display:none}
-#gate form{display:grid;gap:14px;justify-items:start;max-width:34ch;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 30px 26px}
-#gate h1{font-size:clamp(1.6rem,3.2vw,2.2rem);margin:0}
-#gate p{margin:0;color:var(--ink-2);font-size:.92rem;line-height:1.5}
-#gate input{width:100%;font:400 1rem/1.4 var(--font-body);color:var(--ink);background:var(--paper-2);border:1px solid var(--line-strong);border-radius:var(--r-md);padding:10px 12px}
-#gate input:focus-visible{outline:2px solid var(--ember-ink);outline-offset:2px}
-#gate button{appearance:none;border:1px solid var(--olive-ink);background:var(--olive-ink);color:var(--paper);border-radius:999px;padding:9px 18px;font:500 .72rem/1 var(--font-mono);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
-#gate button:hover{background:var(--ink);border-color:var(--ink)}
-#gate #gate-msg{font-size:.82rem;color:var(--ember-ink);min-height:1.2em}
-
 /* starfield: the design system's Starfield, mounted fixed to the viewport */
 #starfield{position:fixed;inset:0;z-index:0;display:block;pointer-events:none;opacity:.65}
 
@@ -207,8 +192,6 @@ html[data-figures="on"] .fig[data-open="false"] .fig-head>:not(.eyebrow){display
 .fig-summary{display:flex;align-items:center;gap:12px;width:100%;appearance:none;background:none;border:0;padding:0;margin:0;text-align:left;cursor:pointer}
 .fig-head .fig-summary:hover{color:var(--ink)}
 .fig-summary:focus-visible{outline:2px solid var(--ember-ink);outline-offset:3px;border-radius:var(--r-sm)}
-/* the heading focused after unlocking is a landing point, not a control - no ring */
-#h1[tabindex]:focus,#h1[tabindex]:focus-visible{outline:none;box-shadow:none}
 .fig-chev{margin-left:auto;flex:0 0 auto;width:7px;height:7px;color:var(--olive);border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform var(--base) var(--ease)}
 .fig-head .fig-summary:hover .fig-chev{color:var(--olive-ink)}
 .fig-summary[aria-expanded="true"] .fig-chev{transform:translateY(1px) rotate(-135deg)}
@@ -335,22 +318,11 @@ html[data-figures="on"] .fig[data-open="false"] .fig-head>:not(.eyebrow){display
 </style>
 <script>(function(){var t=null;try{t=localStorage.getItem('ia-theme-2')}catch(e){}if(t!=='dark'&&t!=='light'){try{t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}catch(e){t='light'}}document.documentElement.setAttribute('data-ia-theme',t)})();
 document.documentElement.setAttribute('data-figures','off');
-try{if(localStorage.getItem('ia-gate')!=='1')document.documentElement.setAttribute('data-locked','yes')}catch(e){document.documentElement.setAttribute('data-locked','yes')}
 try{var q=new URLSearchParams(location.search).get('figures'),f=(q==='on'||q==='off')?q:localStorage.getItem('ia:figures-2');if(f==='off'||f==='on')document.documentElement.setAttribute('data-figures',f)}catch(e){}</script>
 <!--BODY-->
 <a class="skip" href="#intro">Skip to the essay</a>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <canvas id="starfield" aria-hidden="true"></canvas>
-<div id="gate" hidden>
-  <form id="gate-form">
-    <span class="eyebrow">Superintelligence Foundry</span>
-    <h1>Intrinsic Alignment</h1>
-    <label class="sr-only" for="gate-pass">Password</label>
-    <input id="gate-pass" type="password" autocomplete="current-password" spellcheck="false" placeholder="Password">
-    <button type="submit">Read</button>
-    <p id="gate-msg" role="status" aria-live="polite"></p>
-  </form>
-</div>
 <div class="shell" id="top">
   <nav class="rail" aria-label="Contents">
     <a class="wordmark" href="#top">Intrinsic Alignment</a>
@@ -1440,41 +1412,6 @@ try{var q=new URLSearchParams(location.search).get('figures'),f=(q==='on'||q==='
     mode();
     (phone.addEventListener ? phone.addEventListener('change', mode) : phone.addListener(mode));
     addEventListener('resize', sync, { passive: true });
-  });
-})();
-</script>
-<script>
-/* gate.js: a soft cover, not security. The article ships in this page's source, so anyone
-   who views source or disables JavaScript can read it. Use the artifact's own sharing
-   controls for real access control. */
-(function () {
-  'use strict';
-  var KEY = 'ia-gate', PASS = 'creativeagi';
-  var root = document.documentElement;
-  var gate = document.getElementById('gate');
-  var form = document.getElementById('gate-form');
-  var field = document.getElementById('gate-pass');
-  var msg = document.getElementById('gate-msg');
-  if (!gate || !form) return;
-  gate.hidden = false;                              // the CSS decides whether it shows
-
-  function unlock() {
-    root.removeAttribute('data-locked');
-    try { localStorage.setItem(KEY, '1'); } catch (e) {}
-    gate.hidden = true;
-    var h1 = document.getElementById('h1');
-    if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
-    window.dispatchEvent(new Event('resize'));      // let the starfield and rail re-measure
-  }
-  if (root.getAttribute('data-locked') !== 'yes') { gate.hidden = true; return; }
-  setTimeout(function () { field && field.focus(); }, 60);
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    if (field.value.trim().toLowerCase() === PASS) { unlock(); return; }
-    msg.textContent = 'That password is not right.';
-    field.value = '';
-    field.focus();
   });
 })();
 </script>
