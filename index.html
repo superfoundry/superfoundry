@@ -246,14 +246,49 @@
 <img src="uploads/a16zlogo.svg" alt="Andreessen Horowitz" style="height:58px;width:auto;display:block;opacity:0.82" />
 </div>
 </div>
-<a class="sf-mid sf-mail" href="mailto:jad@superfoundry.dev" style="display:flex;align-items:center;gap:10px;width:max-content;text-decoration:none">
+<div style="display:flex;flex-direction:column;gap:8px">
+<a class="sf-mid sf-mail" href="#" onClick="{{ kitOpen }}" style="display:flex;align-items:center;gap:10px;width:max-content;text-decoration:none;cursor:pointer">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ai)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none;margin-top:-2px;transition:stroke 500ms cubic-bezier(0.2,0,0,1)"><path d="M15 18h-5"></path><path d="M18 14h-8"></path><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M10 6h8v4h-8V6Z"></path></svg>
+<span style="font:var(--text-body-m);color:var(--text-secondary)">Join our <span class="sf-mail-f" style="transition:color 500ms cubic-bezier(0.2,0,0,1)">newsletter</span>.</span>
+</a>
+<a class="sf-mid sf-mail" href="mailto:jad@superfoundry.dev" onClick="{{ emailClick }}" style="display:flex;align-items:center;gap:10px;width:max-content;text-decoration:none">
 <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-ai)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none;margin-top:-2px;transition:stroke 500ms cubic-bezier(0.2,0,0,1)"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
 <span style="font:var(--text-body-m);color:var(--text-secondary)">Work with <span class="sf-mail-f" style="transition:color 500ms cubic-bezier(0.2,0,0,1)">SuperFoundry</span>.</span>
 </a>
+</div>
 </section>
 </div>
 </main>
 <div aria-hidden="true" style="position:fixed;inset:0;z-index:-1;background:linear-gradient(160deg, #FBF8F3 0%, #F1ECE4 45%, #E4DDD2 100%);pointer-events:none"></div>
+<div style="position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:var(--page-margin);background:var(--surface-overlay);transition:opacity 200ms cubic-bezier(0.2,0,0,1);opacity:{{ kitModalOpacity }};pointer-events:{{ kitModalEvents }}" onClick="{{ kitClose }}">
+<div role="dialog" aria-label="Join our newsletter" onClick="{{ kitStop }}" style="position:relative;width:100%;max-width:380px;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:24px 22px 18px;display:flex;flex-direction:column;gap:14px">
+<sc-if value="{{ kitDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0">
+<div style="font:var(--text-label);color:var(--text-olive);letter-spacing:var(--tracking-wider);text-transform:uppercase">Subscribed</div>
+<div style="font:var(--text-display-s);color:var(--text-primary);letter-spacing:var(--tracking-tight)">Thank you.</div>
+<div style="font:var(--text-body-s);color:var(--text-secondary)">Check your inbox to confirm your subscription.</div>
+</div>
+</sc-if>
+<sc-if value="{{ kitNotDone }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:6px">
+<div style="font:var(--text-label);color:var(--text-tertiary);letter-spacing:var(--tracking-wider);text-transform:uppercase">Newsletter</div>
+<div style="font:var(--text-body-s);color:var(--text-secondary)">Follow us for the latest updates and launches!</div>
+</div>
+<form id="kit-form" onSubmit="{{ kitSubmit }}" style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;gap:8px">
+<input id="kit-first" type="text" name="fields[first_name]" required="required" placeholder="First name" autoComplete="given-name" style="flex:1;min-width:0;font:var(--text-body-s);color:var(--text-primary);background:var(--sf-paper-050);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:8px 10px;outline:none" style-focus="border-color:var(--accent-default);box-shadow:var(--shadow-focus-ring)" />
+<input id="kit-last" type="text" name="fields[last_name]" required="required" placeholder="Last name" autoComplete="family-name" style="flex:1;min-width:0;font:var(--text-body-s);color:var(--text-primary);background:var(--sf-paper-050);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:8px 10px;outline:none" style-focus="border-color:var(--accent-default);box-shadow:var(--shadow-focus-ring)" />
+</div>
+<input id="kit-industry" type="text" name="fields[industry]" required="required" placeholder="Industry" autoComplete="organization-title" style="width:100%;font:var(--text-body-s);color:var(--text-primary);background:var(--sf-paper-050);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:8px 10px;outline:none" style-focus="border-color:var(--accent-default);box-shadow:var(--shadow-focus-ring)" />
+<div style="display:flex;gap:8px">
+<input id="kit-email" type="email" name="email_address" required="required" placeholder="you@example.com" autoComplete="email" style="flex:1;min-width:0;font:var(--text-body-s);color:var(--text-primary);background:var(--sf-paper-050);border:1px solid var(--border-default);border-radius:var(--radius-sm);padding:8px 10px;outline:none" style-focus="border-color:var(--accent-default);box-shadow:var(--shadow-focus-ring)" />
+<button type="submit" style="font:var(--text-body-s);font-weight:600;color:#FFFDFA;background:var(--accent-default);border:none;border-radius:var(--radius-sm);padding:8px 16px;cursor:pointer;transition:background 200ms cubic-bezier(0.2,0,0,1), transform 120ms cubic-bezier(0.2,0,0,1)" style-hover="background:var(--accent-hover)" style-active="background:var(--accent-active);transform:scale(0.97)">Subscribe</button>
+</div>
+<div id="kit-msg" style="font:var(--text-body-s);color:var(--text-secondary);min-height:1.2em">{{ kitMsg }}</div>
+</form>
+</sc-if>
+</div>
+</div>
 <div id="scroll-track" style="height:400vh;pointer-events:none"></div>
 <div style="position:fixed;inset:0;z-index:40;background:#FBF8F3;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-start;padding:11vh var(--page-margin) 0 calc(var(--page-margin) * 2);cursor:pointer;transition:opacity 900ms cubic-bezier(0.2,0,0,1);opacity:{{ curtainOpacity }};pointer-events:{{ curtainEvents }}" ref="{{ curtainRef }}" onClick="{{ open }}">
 <video ref="{{ videoRef }}" playsInline="playsinline" preload="none" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:max(100vw, 133.34vh);aspect-ratio:1112/834;height:auto;object-fit:cover;display:block;opacity:0;transition:opacity 500ms linear">
@@ -292,6 +327,16 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.syncChapters();
+    if (/(^|\.)superfoundry\.dev$/.test(location.hostname) && !window.gtag) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-64S0MJXND2');
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-64S0MJXND2';
+      document.head.appendChild(s);
+    }
     // live Aleph mark from /logo/ (same-origin deploy): shadow baked in from the
     // committed /logo/logo-config.json — the single source of truth, no localStorage.
     // The static <img> in the markup stays as the fallback where /logo/ doesn't exist.
@@ -1549,6 +1594,10 @@ class Component extends DCLogic {
     // this runtime doesn't pass prevState — track the previous `open` ourselves
     const prevOpen = this._prevOpen; this._prevOpen = this.state.open;
     const prevActive = this._prevActive; this._prevActive = this.state.active;
+    if (this.state.open && this.state.active) {
+      this._gaSeen = this._gaSeen || {};
+      if (!this._gaSeen[this.state.active]) { this._gaSeen[this.state.active] = 1; this.track('chapter_view', { chapter: this.state.active }); }
+    }
     // safety net: if the gate is open but the intro never started, start it now
     if (!((this.props.maintenanceLock ?? false) && !this.state.unlocked) && this.startIntro) this.startIntro();
     if (prevOpen !== undefined && prevOpen !== this.state.open && this.lockScroll) this.lockScroll(!this.state.open);
@@ -1627,6 +1676,7 @@ class Component extends DCLogic {
     return this._chapCache || ['foundry', 'mission', 'founders'];
   }
   chapN() { return this.chapIds().length; }
+  track(name, params) { if (window.gtag) window.gtag('event', name, params || {}); }
   syncChapters() {
     const secs = Array.from(document.querySelectorAll('main section[id^="sec-"]'));
     if (!secs.length) return;
@@ -1707,6 +1757,39 @@ class Component extends DCLogic {
       missionColor: this.state.active === 'mission' ? on : off,
       foundersColor: this.state.active === 'founders' ? on : off,
       contactColor: this.state.active === 'contact' ? on : off,
+      kitMsg: this.state.kitMsg || '',
+      kitDone: !!this.state.kitDone,
+      kitNotDone: !this.state.kitDone,
+      kitModalOpacity: this.state.kitModal ? 1 : 0,
+      kitModalEvents: this.state.kitModal ? 'auto' : 'none',
+      emailClick: () => this.track('email_click', { address: 'jad@superfoundry.dev' }),
+      kitOpen: (e) => { e.preventDefault(); this.track('newsletter_open'); this.setState({ kitModal: true, kitMsg: '', kitDone: false }); setTimeout(() => { const el = document.getElementById('kit-first'); if (el) el.focus(); }, 220); },
+      kitClose: () => this.setState({ kitModal: false }),
+      kitStop: (e) => e.stopPropagation(),
+      kitSubmit: async (e) => {
+        e.preventDefault();
+        const KIT_FORM_ID = '9932620';
+        const email = document.getElementById('kit-email').value.trim();
+        if (!email) return;
+        this.setState({ kitMsg: 'Subscribing\u2026' });
+        try {
+          const fd = new FormData();
+          fd.append('email_address', email);
+          fd.append('fields[first_name]', document.getElementById('kit-first').value.trim());
+          fd.append('fields[last_name]', document.getElementById('kit-last').value.trim());
+          fd.append('fields[industry]', document.getElementById('kit-industry').value.trim());
+          fd.append('tags[]', '23535543');
+          const r = await fetch('https://app.kit.com/forms/' + KIT_FORM_ID + '/subscriptions', {
+            method: 'POST', body: fd, headers: { Accept: 'application/json' }
+          });
+          if (!r.ok) throw new Error();
+          ['kit-first', 'kit-last', 'kit-industry', 'kit-email'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+          this.setState({ kitMsg: '', kitDone: true });
+          this.track('newsletter_subscribe');
+        } catch (err) {
+          this.setState({ kitMsg: 'Something went wrong \u2014 try again.' });
+        }
+      },
       open: () => {
         if (this.state.open || this._skipping) return;
         const v = this.video.current, b = this.blend.current;
