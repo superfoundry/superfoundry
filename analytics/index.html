@@ -657,6 +657,12 @@ const CONFIG = {
   EXIT_URL: 'https://superfoundry.dev/',
   EXIT_DELAY_MS: 3000,
 
+  // Real data only ever loads on these hosts (they must also be authorised
+  // JavaScript origins on the OAuth client). Anywhere else — chat previews, a
+  // file opened locally — the page shows clearly labelled sample data instead.
+  // Add 'localhost' here (and to the OAuth client) to test real data locally.
+  LIVE_HOSTS: ['superfoundry.dev', 'www.superfoundry.dev'],
+
   // Internal pages and asset folders left out of the page lists ("Pages
   // gaining/losing views", "Entry pages worth a look" and the headline lines
   // about pages). Matched by prefix, so '/logo/' also covers /logo/config.html.
@@ -1247,7 +1253,10 @@ function renderTrend(root, { cur, prev }) {
 
 const $ = (id) => document.getElementById(id);
 const RANGES = [7, 28, 90];
-const DEMO = !CONFIG.GA4_PROPERTY_ID || !CONFIG.OAUTH_CLIENT_ID;
+const ON_SITE = CONFIG.LIVE_HOSTS.includes(location.hostname);
+const CONFIGURED = Boolean(CONFIG.GA4_PROPERTY_ID && CONFIG.OAUTH_CLIENT_ID);
+// Sample data is for previews only: it never appears on the live site.
+const DEMO = !ON_SITE;
 
 const state = {
   range: RANGES.includes(Number(new URLSearchParams(location.search).get('range'))) ? Number(new URLSearchParams(location.search).get('range')) : 28,
@@ -1274,8 +1283,14 @@ function start() {
   markRange();
 
   if (DEMO) {
-    status('Add the GA4 property ID and OAuth client ID in config.js to connect (see SETUP.md).', false, 'Sample data');
+    status('This is a preview. Real numbers load on superfoundry.dev after signing in with Google.', false, 'Sample data');
     return load();
+  }
+  if (!CONFIGURED) {
+    // On the live site but the IDs are missing: show nothing rather than made-up numbers.
+    $('report').hidden = true;
+    status("The analytics dashboard isn't set up yet. The GA4 property ID and OAuth client ID still need adding to this page's config.");
+    return;
   }
   const signin = $('signin');
   signin.hidden = false;
