@@ -434,6 +434,9 @@ h1, h2, h3, p { margin: 0; }
 .tbl th.num { text-align: right; }
 .tbl .path { font-family: var(--font-mono); font-size: 0.8125rem; word-break: break-all; }
 .tbl-wrap { overflow-x: auto; }
+.page { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.page__name { overflow-wrap: anywhere; line-height: 20px; }
+.page__path { font: 400 0.75rem/16px var(--font-mono); /* whole-pixel line heights keep row lines continuous */ color: var(--text-tertiary); overflow-wrap: anywhere; }
 .empty { font: var(--text-body-s); color: var(--text-tertiary); }
 
 /* Channel colours alternate hue AND lightness so neighbours stay distinct */
@@ -668,6 +671,16 @@ const CONFIG = {
   // about pages). Matched by prefix, so '/logo/' also covers /logo/config.html.
   // Site-wide totals still count everyone.
   IGNORE_PATHS: ['/logo/', '/uploads/', '/analytics/'],
+
+  // Readable names for pages. Homepage sections (/#mission) are named
+  // automatically as "Homepage › Mission"; anything not listed shows its path.
+  PAGE_NAMES: {
+    '/': 'Homepage',
+    '/index.html': 'Homepage',
+    '/resources/': 'Resources',
+    '/resources/align.html': 'Intrinsic Alignment',
+    '/careers': 'Careers',
+  },
 };
 
 // ───── insights.js ─────
@@ -780,6 +793,19 @@ function attention({ landing, totals }, n = 5) {
     .slice(0, n);
 }
 
+// "/#founders" → "Homepage › Founders"; "/resources/align.html" → its PAGE_NAMES entry.
+function pageName(path) {
+  const names = CONFIG.PAGE_NAMES || {};
+  if (names[path]) return names[path];
+  const m = /^(\/[^#]*)#(.+)$/.exec(path || '');
+  if (m) {
+    const base = names[m[1]] || m[1];
+    const section = m[2].replace(/^sec-/, '').replace(/[-_]+/g, ' ');
+    return `${base} › ${section.charAt(0).toUpperCase()}${section.slice(1)}`;
+  }
+  return path;
+}
+
 const WORD = { up: 'up', down: 'down', flat: 'about the same', new: 'new' };
 
 // A few sentences a teammate can read in ten seconds.
@@ -822,7 +848,7 @@ function headline(snapshot) {
     const r = rising[0];
     out.push({
       tone: 'good',
-      text: `Fastest-growing page: ${r.path}, ${fmt.signed(r.delta)} views${r.change === null ? ' (new)' : ` (${fmt.change(r.change)})`}.`,
+      text: `Fastest-growing page: ${pageName(r.path)}, ${fmt.signed(r.delta)} views${r.change === null ? ' (new)' : ` (${fmt.change(r.change)})`}.`,
     });
   }
 
@@ -830,7 +856,7 @@ function headline(snapshot) {
   if (worst) {
     out.push({
       tone: 'bad',
-      text: `Worth a look: only ${fmt.pct(worst.engagementRate)} of visits that start on ${worst.path} engage, against ${fmt.pct(cur.engagementRate)} site-wide.`,
+      text: `Worth a look: only ${fmt.pct(worst.engagementRate)} of visits that start on ${pageName(worst.path)} engage, against ${fmt.pct(cur.engagementRate)} site-wide.`,
     });
   }
   return out;
@@ -1525,7 +1551,7 @@ function render(snap) {
     list.map((p) => {
       const d = h('span', 'delta'); d.append(delta(p.change));
       d.firstChild.append(document.createTextNode(` (${fmt.signed(p.delta)})`));
-      return [[p.path, 'path'], [fmt.int(p.cur), 'num'], [d, 'num']];
+      return [[pageCell(p.path), 'page'], [fmt.int(p.cur), 'num'], [d, 'num']];
     }),
   ) : h('p', 'empty', emptyText);
   $('rising').replaceChildren(moverTable(mv.rising, 'No page gained meaningfully.'));
@@ -1542,9 +1568,18 @@ function render(snap) {
       fill.style.width = `${(at[0].lost ? (l.lost / at[0].lost) * 100 : 0).toFixed(1)}%`;
       track.append(fill);
       cell.append(track, h('span', 'lost__val', fmt.int(l.lost)));
-      return [[l.path, 'path'], [fmt.int(l.sessions), 'num'], [fmt.pct(l.engagementRate), 'num'], [cell, 'num']];
+      return [[pageCell(l.path), 'page'], [fmt.int(l.sessions), 'num'], [fmt.pct(l.engagementRate), 'num'], [cell, 'num']];
     }),
   ) : h('p', 'empty', 'Every busy entry page engages close to the site average.'));
+}
+
+// A page as its readable name, with the real path underneath in small mono.
+function pageCell(path) {
+  const cell = h('span', 'page');
+  const name = pageName(path);
+  cell.append(h('span', 'page__name', name));
+  if (name !== path) cell.append(h('span', 'page__path', path));
+  return cell;
 }
 
 // GA's raw source names, made readable. Anything not listed shows as-is.
