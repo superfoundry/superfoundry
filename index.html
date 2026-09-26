@@ -266,7 +266,7 @@
 <div style="display:flex;flex-direction:column;gap:8px;padding:8px 0">
 <div style="font:var(--text-label);color:var(--text-olive);letter-spacing:var(--tracking-wider);text-transform:uppercase">Subscribed</div>
 <div style="font:var(--text-display-s);color:var(--text-primary);letter-spacing:var(--tracking-tight)">Thank you.</div>
-<div style="font:var(--text-body-s);color:var(--text-secondary)">Check your inbox to confirm your subscription.</div>
+<div style="font:var(--text-body-s);color:var(--text-secondary)">Thanks for joining. We'll be in touch.</div>
 </div>
 </sc-if>
 <sc-if value="{{ kitNotDone }}" hint-placeholder-val="{{ true }}">
@@ -285,6 +285,12 @@
 <button type="submit" style="font:var(--text-body-s);font-weight:600;color:#FFFDFA;background:var(--accent-default);border:none;border-radius:var(--radius-sm);padding:8px 16px;cursor:pointer;transition:background 200ms cubic-bezier(0.2,0,0,1), transform 120ms cubic-bezier(0.2,0,0,1)" style-hover="background:var(--accent-hover)" style-active="background:var(--accent-active);transform:scale(0.97)">Subscribe</button>
 </div>
 <div id="kit-msg" style="font:var(--text-body-s);color:var(--text-secondary);min-height:1.2em">{{ kitMsg }}</div>
+<sc-if value="{{ kitNeedsVerify }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;font:var(--text-body-s);color:var(--text-secondary)">
+<div>One more step: confirm you're human to finish signing up.</div>
+<a href="{{ kitVerifyUrl }}" target="_blank" rel="noopener" onClick="{{ kitVerifyClick }}" style="align-self:flex-start;font:var(--text-body-s);font-weight:600;color:#FFFDFA;background:var(--accent-default);border-radius:var(--radius-sm);padding:8px 16px;text-decoration:none">Confirm sign-up</a>
+</div>
+</sc-if>
 </form>
 </sc-if>
 </div>
@@ -1749,11 +1755,14 @@ class Component extends DCLogic {
       contactColor: this.state.active === 'contact' ? on : off,
       kitMsg: this.state.kitMsg || '',
       kitDone: !!this.state.kitDone,
+      kitVerifyUrl: this.state.kitVerifyUrl || '',
+      kitNeedsVerify: !!this.state.kitVerifyUrl,
+      kitVerifyClick: () => { this.track('newsletter_verify_click'); setTimeout(() => this.setState({ kitVerifyUrl: '', kitDone: true }), 300); },
       kitNotDone: !this.state.kitDone,
       kitModalOpacity: this.state.kitModal ? 1 : 0,
       kitModalEvents: this.state.kitModal ? 'auto' : 'none',
       emailClick: () => this.track('email_click', { address: 'jad@superfoundry.dev' }),
-      kitOpen: (e) => { e.preventDefault(); this.track('newsletter_open'); this.setState({ kitModal: true, kitMsg: '', kitDone: false }); setTimeout(() => { const el = document.getElementById('kit-first'); if (el) el.focus(); }, 220); },
+      kitOpen: (e) => { e.preventDefault(); this.track('newsletter_open'); this.setState({ kitModal: true, kitMsg: '', kitDone: false, kitVerifyUrl: '' }); setTimeout(() => { const el = document.getElementById('kit-first'); if (el) el.focus(); }, 220); },
       kitClose: () => this.setState({ kitModal: false }),
       kitStop: (e) => e.stopPropagation(),
       kitSubmit: async (e) => {
@@ -1773,6 +1782,12 @@ class Component extends DCLogic {
             method: 'POST', body: fd, headers: { Accept: 'application/json' }
           });
           if (!r.ok) throw new Error();
+          let res = {}; try { res = await r.json(); } catch (_) {}
+          if (res.status === 'quarantined' && res.url) {
+            this.setState({ kitMsg: '', kitVerifyUrl: res.url });
+            this.track('newsletter_quarantined');
+            return;
+          }
           ['kit-first', 'kit-last', 'kit-industry', 'kit-email'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
           this.setState({ kitMsg: '', kitDone: true });
           this.track('newsletter_subscribe');
