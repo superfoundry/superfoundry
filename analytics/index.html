@@ -1035,8 +1035,24 @@ async function fetchSnapshot({ propertyId, token, range }) {
   return toSnapshot(range, p, batch.reports, extra?.reports?.[0], extra?.reports?.[1]);
 }
 
-// Google Identity Services token client. The access token lives in memory
-// only (about an hour); nothing is written to storage.
+// Google Identity Services token client. The access token (read-only
+// analytics scope, valid about an hour) is remembered in localStorage until
+// it expires, so reopening the page within that window skips the sign-in.
+const TOKEN_KEY = 'sf-analytics-token';
+function readCachedToken() {
+  try {
+    const c = JSON.parse(localStorage.getItem(TOKEN_KEY) || 'null');
+    if (c && c.token && c.exp > Date.now() + 60e3) return c.token; // a minute's margin
+  } catch {}
+  clearCachedToken();
+  return null;
+}
+function cacheToken(resp) {
+  try { localStorage.setItem(TOKEN_KEY, JSON.stringify({ token: resp.access_token, exp: Date.now() + (Number(resp.expires_in) || 3600) * 1000 })); } catch {}
+}
+function clearCachedToken() {
+  try { localStorage.removeItem(TOKEN_KEY); } catch {}
+}
 function createTokenClient(clientId, onToken, onError) {
   if (!window.google?.accounts?.oauth2) throw new Error('Google sign-in script did not load');
   return window.google.accounts.oauth2.initTokenClient({
@@ -1319,9 +1335,16 @@ function start() {
     return;
   }
   const signin = $('signin');
-  signin.hidden = false;
   $('report').hidden = true; // nothing but the sign-in button until data loads
   signin.addEventListener('click', () => requestToken());
+  state.token = readCachedToken();
+  if (state.token) {
+    // Signed in within the last hour: go straight to the data.
+    signin.hidden = true;
+    status('Loading…');
+    return load();
+  }
+  signin.hidden = false;
   status('Sign in with a Google account that has access to the Google Analytics property.');
 }
 
@@ -1329,7 +1352,7 @@ function requestToken(prompt = '') {
   try {
     state.tokenClient ||= createTokenClient(
       CONFIG.OAUTH_CLIENT_ID,
-      (resp) => { state.token = resp.access_token; $('signin').hidden = true; load(); },
+      (resp) => { state.token = resp.access_token; cacheToken(resp); $('signin').hidden = true; load(); },
       (e) => {
         // A blocked pop-up is the browser's doing, not a failed sign-in: let them retry.
         if (e.type === 'popup_failed_to_open') return status('Your browser blocked the Google sign-in window. Allow pop-ups for this site and try again.');
@@ -1363,6 +1386,7 @@ function markRange() {
 // Sign-in failed or the account has no access: say so briefly, then go to the
 // main site. replace() keeps this page out of the back-button history.
 function leave(message) {
+  clearCachedToken(); // let them try a different account next time
   $('signin').hidden = true;
   $('range').hidden = true;
   $('report').hidden = true;
@@ -1389,6 +1413,7 @@ async function load() {
   } catch (e) {
     if (e instanceof GAError && e.status === 401) {
       state.token = null;
+      clearCachedToken();
       $('signin').hidden = false;
       status('Your Google session expired. Sign in again.');
     } else if (e instanceof GAError && e.status === 403) {
